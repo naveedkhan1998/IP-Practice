@@ -231,7 +231,6 @@
       }
 
       .navigation button::after {
-        content: attr(data-tooltip);
         position: absolute;
         bottom: 100%;
         left: 50%;
@@ -440,8 +439,8 @@
       <div class="question" id="question"></div>
       <ul class="options" id="options"></ul>
       <div class="navigation">
-        <button id="prev-button" onclick="prevQuestion()" class="arrow" data-tooltip="Previous Question" disabled>&lt;</button>
-        <button id="next-button" onclick="nextQuestion()" class="arrow" data-tooltip="Next Question">&gt;</button>
+        <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled>&lt;</button>
+        <button id="next-button" onclick="nextQuestion()" class="arrow">&gt;</button>
       </div>
       <div class="explanation" id="explanation">
         <strong>Explanation:</strong>
