@@ -3,489 +3,321 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IP Law Questions</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
+    <title>IP Law Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --background-dark: linear-gradient(135deg, #121212, #1f1f1f);
-        --background-light: linear-gradient(135deg, #f0f0f0, #ffffff);
-        --text-dark: #ffffff;
-        --text-light: #000000;
-        --container-dark: #1b1b1b;
+        --primary-color: #3498db;
+        --secondary-color: #f39c12;
+        --background-light: #f5f7fa;
+        --background-dark: #121212;
+        --text-light: #2c3e50;
+        --text-dark: #e0e0e0;
         --container-light: #ffffff;
-        --progress-bar-dark: #3498db;
-        --progress-bar-light: #3498db;
-        --explanation-dark: rgba(46, 204, 113, 0.2);
-        --explanation-light: rgba(46, 204, 113, 0.8);
-        --progress-display-dark: #2c2c2c;
-        --progress-display-light: #d3d3d3;
+        --container-dark: #1e1e1e;
+        --button-color: #3498db;
+        --button-hover: #2980b9;
+        --correct-color: #2ecc71;
+        --incorrect-color: #e74c3c;
       }
 
       body {
-        font-family: "Roboto", sans-serif;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: auto;
-        margin: 0;
-        background: var(--background-dark);
-        color: var(--text-dark);
-        padding: 20px;
-        box-sizing: border-box;
-        overflow-y: auto;
-        flex-direction: column;
-        transition: background 0.3s, color 0.3s;
+        background: var(--background-light);
+        color: var(--text-light);
+        transition: background-color 0.3s, color 0.3s;
       }
 
-      .progress-bar {
-        height: 5px;
-        background: var(--progress-bar-dark);
-        width: 100%;
-        transition: width 0.3s, background 0.3s;
-        position: fixed;
-        top: 0;
-        left: 0;
-      }
-
-      .container {
-        background: var(--container-dark);
+      .quiz-container {
+        background-color: var(--container-light);
         border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-        width: 100%;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 90%;
         max-width: 800px;
-        display: flex;
-        flex-direction: column;
-        backdrop-filter: blur(10px);
-        animation: fadeIn 0.5s ease-in-out;
-        margin-top: 40px;
-        margin-bottom: 20px;
-        overflow-x: clip;
-        transition: background 0.3s;
+        transition: background-color 0.3s;
       }
 
-      .header {
+      .quiz-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 2rem;
       }
 
-      .header h1 {
-        font-size: 32px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-      }
-
-      .header-right {
-        display: flex;
-        align-items: center;
+      .quiz-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
       }
 
       .progress-display {
-        font-size: 18px;
-        background: var(--progress-display-dark);
-        padding: 10px 20px;
-        border-radius: 12px;
-        transition: background 0.3s;
+        font-size: 1.2rem;
+        font-weight: 500;
       }
 
-      .toggle-button {
-        background: none;
-        border: none;
+      .timer {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+      }
+
+      .question {
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      .options {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .option {
+        background-color: rgba(52, 152, 219, 0.1);
+        border: 2px solid rgba(52, 152, 219, 0.2);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
         cursor: pointer;
-        margin-left: 20px;
-        transition: transform 0.3s;
+        transition: all 0.3s ease;
       }
 
-      .toggle-button svg {
-        width: 24px;
-        height: 24px;
+      .option:hover {
+        background-color: rgba(52, 152, 219, 0.2);
+        transform: translateY(-3px);
       }
 
-      .toggle-button:hover {
-        transform: scale(1.1);
+      .option.correct {
+        background-color: var(--correct-color);
+        color: white;
+      }
+
+      .option.incorrect {
+        background-color: var(--incorrect-color);
+        color: white;
       }
 
       .explanation {
-        background: var(--explanation-dark);
-        border-left: 4px solid #2ecc71;
-        padding: 15px;
-        margin-top: 20px;
-        border-radius: 12px;
-        height: 150px;
-        overflow-y: auto;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
+        background-color: rgba(52, 152, 219, 0.1);
+        border-left: 4px solid var(--primary-color);
+        padding: 1rem;
+        margin-top: 1.5rem;
+        border-radius: 0 10px 10px 0;
+        font-size: 0.9rem;
         display: none;
       }
 
       .explanation.show {
-        opacity: 1;
         display: block;
-      }
-
-      .question {
-        font-size: 24px;
-        margin-bottom: 25px;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-      }
-
-      .options {
-        list-style: none;
-        padding: 0;
-      }
-
-      .options li {
-        margin-bottom: 15px;
-        cursor: pointer;
-        padding: 20px;
-        border-radius: 12px;
-        transition: background-color 0.3s, transform 0.3s;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.15));
-        display: flex;
-        align-items: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      }
-
-      .options input {
-        display: none;
-      }
-
-      .options label {
-        cursor: pointer;
-        width: 100%;
-      }
-
-      .options li:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: scale(1.03);
-      }
-
-      .options li.correct {
-        background-color: #2ecc71;
-        border: 1px solid #27ae60;
-        animation: correctAnswer 0.5s ease-in-out;
-      }
-
-      .options li.incorrect {
-        background-color: #e74c3c;
-        border: 1px solid #c0392b;
-        animation: incorrectAnswer 0.5s ease-in-out;
-      }
-
-      @keyframes correctAnswer {
-        from {
-          transform: scale(1);
-        }
-        to {
-          transform: scale(1.05);
-        }
-      }
-
-      @keyframes incorrectAnswer {
-        from {
-          transform: scale(1);
-        }
-        to {
-          transform: scale(0.95);
-        }
+        animation: fadeIn 0.5s ease-in-out;
       }
 
       .navigation {
-        margin-top: 30px;
         display: flex;
         justify-content: space-between;
-        padding-top: 20px;
-        border-top: 2px solid rgba(255, 255, 255, 0.2);
-        flex-wrap: wrap;
-        gap: 10px;
+        margin-top: 2rem;
       }
 
-      .navigation button {
-        background-color: #1abc9c;
-        background-image: linear-gradient(to bottom right, #16a085, #1abc9c);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      .nav-button {
+        background-color: var(--button-color);
         color: white;
         border: none;
-        padding: 15px 25px;
-        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
         cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        position: relative;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background-color 0.3s, transform 0.3s;
       }
 
-      .navigation button:hover {
-        background-image: linear-gradient(to bottom right, #1abc9c, #16a085);
+      .nav-button:hover:not(:disabled) {
+        background-color: var(--button-hover);
+        transform: translateY(-3px);
       }
 
-      .navigation button:disabled {
-        background-color: #444;
+      .nav-button:disabled {
+        opacity: 0.5;
         cursor: not-allowed;
-      }
-
-      .navigation .arrow {
-        font-size: 24px;
-      }
-
-      .navigation button::after {
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.7);
-        color: #fff;
-        padding: 5px 10px;
-        border-radius: 5px;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s;
-        white-space: nowrap;
-      }
-
-      .navigation button:hover::after {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .question-nav-container {
-        margin-top: 30px;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        border-top: 2px solid rgba(255, 255, 255, 0.2);
-        background-color: rgba(30, 30, 30, 0.8);
-        border-radius: 12px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow-x: auto;
-        max-width: 100%;
-      }
-
-      .question-nav-container {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        overflow-y: auto;
-        overflow-x: hidden;
-        max-height: 400px;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        padding: 10px;
-        margin: 20px 0;
       }
 
       .question-nav {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-        gap: 15px;
+        display: flex;
+        flex-wrap: wrap;
         justify-content: center;
-        align-items: center;
-        width: 100%;
+        gap: 0.5rem;
+        margin-top: 2rem;
       }
 
-      .question-nav button {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 15px;
+      .question-nav-button {
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
+        background-color: rgba(52, 152, 219, 0.1);
+        border: none;
+        color: var(--text-light);
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 16px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
       }
 
-      .question-nav button:hover {
-        background-color: #2980b9;
+      .question-nav-button:hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .question-nav-button.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .question-nav-button.correct {
+        background-color: var(--correct-color);
+        color: white;
+      }
+
+      .question-nav-button.incorrect {
+        background-color: var(--incorrect-color);
+        color: white;
+      }
+
+      .mode-toggle {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .mode-toggle:hover {
         transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(41, 128, 185, 0.5);
       }
 
-      .question-nav button.incorrect {
-        background-color: #e74c3c;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      .question-nav button.correct {
-        background-color: #2ecc71;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      .question-nav button.active {
-        background-color: #2980b9;
-        box-shadow: 0 0 10px rgba(41, 128, 185, 0.7);
-        transform: scale(1.1);
-      }
-
-      .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 10px;
-        gap: 10px;
-      }
-
-      .pagination button {
-        background-color: #e67e22;
+      .reset-button {
+        background-color: var(--secondary-color);
         color: white;
         border: none;
-        padding: 10px 15px;
-        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
         cursor: pointer;
-        transition: background-color 0.3s;
-        font-size: 14px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background-color 0.3s, transform 0.3s;
+        margin-top: 1rem;
       }
 
-      .pagination button:hover {
-        background-color: #d35400;
+      .reset-button:hover {
+        background-color: #e67e22;
+        transform: translateY(-3px);
       }
 
-      .pagination button:disabled {
-        background-color: #444;
-        cursor: not-allowed;
+      body.dark-mode {
+        --background-light: var(--background-dark);
+        --text-light: var(--text-dark);
+        --container-light: var(--container-dark);
       }
 
-      body::-webkit-scrollbar,
-      .question-nav-container::-webkit-scrollbar {
-        width: 8px;
-        background: rgb(0, 0, 0);
-        background-color: #2c2c2c;
-      }
-
-      body::-webkit-scrollbar-track,
-      .question-nav-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-      }
-
-      body::-webkit-scrollbar-thumb,
-      .question-nav-container::-webkit-scrollbar-thumb {
-        background-color: #1abc9c;
-        border-radius: 12px;
-        border: 2px solid transparent;
-        background-clip: padding-box;
-      }
-
-      body::-webkit-scrollbar-thumb:hover,
-      .question-nav-container::-webkit-scrollbar-thumb:hover {
-        background-color: #16a085;
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
 
       @media (max-width: 600px) {
-        .container {
-          padding: 20px;
+        .quiz-container {
+          padding: 1.5rem;
         }
-        .navigation button {
-          padding: 10px 20px;
-          font-size: 16px;
-        }
-        .question {
-          font-size: 20px;
-        }
-        .options li {
-          padding: 15px;
-          font-size: 16px;
-        }
-        .navigation .arrow {
-          font-size: 20px;
-        }
-        .question-nav {
-          gap: 8px;
-        }
-        .question-nav button {
-          width: 40px;
-          height: 40px;
-          font-size: 14px;
-        }
-        .pagination button {
-          padding: 8px 16px;
-          font-size: 12px;
-        }
-        .question-nav-container {
-          max-height: 100px;
-        }
-      }
 
-      body.light-mode {
-        --background-dark: var(--background-light);
-        --text-dark: var(--text-light);
-        --container-dark: var(--container-light);
-        --progress-bar-dark: var(--progress-bar-light);
-        --explanation-dark: var(--explanation-light);
-        --progress-display-dark: var(--progress-display-light);
+        .quiz-title {
+          font-size: 1.5rem;
+        }
+
+        .question {
+          font-size: 1.1rem;
+        }
+
+        .option {
+          padding: 0.8rem;
+        }
+
+        .nav-button {
+          padding: 0.6rem 1.2rem;
+          font-size: 0.9rem;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="progress-bar" id="progress-bar"></div>
-    <div class="container" id="question-container">
-      <div class="header">
-        <h1>IP Law Questions</h1>
-        <div class="header-right">
-          <div class="progress-display" id="progress-display">0/0</div>
-          <button class="toggle-button" id="mode-toggle">
-            <img id="toggle-icon" width="45px" src="sun.svg" alt="icon" />
-          </button>
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <h1 class="quiz-title">IP Law Quiz</h1>
+        <div>
+          <span class="progress-display" id="progress-display">0/0</span>
+          <button class="mode-toggle" id="mode-toggle" aria-label="Toggle light/dark mode">🌙</button>
         </div>
       </div>
+      <div class="timer" id="timer">Time: 00:00</div>
       <div class="question" id="question"></div>
       <ul class="options" id="options"></ul>
-      <div class="navigation">
-        <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled>&lt;</button>
-        <button id="next-button" onclick="nextQuestion()" class="arrow">&gt;</button>
-      </div>
       <div class="explanation" id="explanation">
         <strong>Explanation:</strong>
         <p id="explanation-text"></p>
       </div>
-      <div class="question-nav-container">
-        <div class="question-nav" id="question-nav"></div>
+      <div class="navigation">
+        <button class="nav-button" id="prev-button" onclick="prevQuestion()">&larr; Previous</button>
+        <button class="nav-button" id="next-button" onclick="nextQuestion()">Next &rarr;</button>
       </div>
-      <div class="pagination" id="pagination"></div>
+      <div class="question-nav" id="question-nav"></div>
+      <button class="reset-button" id="reset-button" onclick="resetQuiz()">Reset Quiz</button>
     </div>
 
     <script>
-      const modeToggle = document.getElementById("mode-toggle");
-      const toggleIcon = document.getElementById("toggle-icon");
-
-      modeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("light-mode");
-        updateToggleIcon();
-      });
-
-      function updateToggleIcon() {
-        if (document.body.classList.contains("light-mode")) {
-          toggleIcon.src = "moon.svg";
-        } else {
-          toggleIcon.src = "sun.svg";
-        }
-      }
-
-      const QUESTIONS_PER_PAGE = 20;
+      const QUESTIONS_PER_PAGE = 10;
       let currentQuestionIndex = 0;
       let questions = [];
-      let currentPage = 1;
       let answeredQuestions = {};
+      let timer;
+      let startTime;
 
-      document.addEventListener("DOMContentLoaded", function () {
-        fetch("questions.json")
-          .then((response) => response.json())
-          .then((data) => {
-            questions = data;
-            displayQuestion();
-            createNavButtons();
-            createPagination();
-            updateProgressDisplay();
-          });
+      const modeToggle = document.getElementById("mode-toggle");
+
+      modeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        modeToggle.textContent = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
       });
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          const response = await fetch("questions.json");
+          questions = await response.json();
+          shuffleQuestions();
+          displayQuestion();
+          createNavButtons();
+          updateProgressDisplay();
+          startTimer();
+        } catch (error) {
+          console.error("Error loading questions:", error);
+        }
+      });
+
+      function shuffleQuestions() {
+        for (let i = questions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [questions[i], questions[j]] = [questions[j], questions[i]];
+        }
+      }
 
       function displayQuestion() {
         const questionElement = document.getElementById("question");
@@ -500,42 +332,56 @@
         questionElement.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
         optionsElement.innerHTML = "";
         explanationElement.classList.remove("show");
-        explanationElement.style.display = "none";
         explanationTextElement.textContent = currentQuestion.explanation;
 
         currentQuestion.options.forEach((option, index) => {
           const optionItem = document.createElement("li");
           optionItem.textContent = option;
-          optionItem.addEventListener("click", function () {
-            document.querySelectorAll(".options li").forEach((li) => li.classList.remove("correct", "incorrect"));
-            if (index === currentQuestion.answer) {
-              optionItem.classList.add("correct");
-              document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("correct");
-              answeredQuestions[currentQuestionIndex] = "correct";
-            } else {
-              optionItem.classList.add("incorrect");
-              document.querySelectorAll(".options li")[currentQuestion.answer].classList.add("correct");
-              document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("incorrect");
-              answeredQuestions[currentQuestionIndex] = "incorrect";
+          optionItem.classList.add("option");
+          optionItem.setAttribute("role", "button");
+          optionItem.setAttribute("tabindex", "0");
+          optionItem.addEventListener("click", () => selectOption(index));
+          optionItem.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              selectOption(index);
             }
-            explanationElement.classList.add("show");
-            explanationElement.style.display = "block";
-            updateNavButtons();
-            updateProgressDisplay();
           });
           optionsElement.appendChild(optionItem);
         });
 
-        if (answeredQuestions[currentQuestionIndex] === "correct") {
-          document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("correct");
-        } else if (answeredQuestions[currentQuestionIndex] === "incorrect") {
-          document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("incorrect");
+        if (answeredQuestions[currentQuestionIndex]) {
+          const answer = answeredQuestions[currentQuestionIndex];
+          optionsElement.children[answer.selected].classList.add(answer.correct ? "correct" : "incorrect");
+          if (!answer.correct) {
+            optionsElement.children[currentQuestion.answer].classList.add("correct");
+          }
+          explanationElement.classList.add("show");
         }
 
         prevButton.disabled = currentQuestionIndex === 0;
         nextButton.disabled = currentQuestionIndex === questions.length - 1;
 
-        updateProgressBar();
+        updateProgressDisplay();
+        updateNavButtons();
+      }
+
+      function selectOption(index) {
+        if (answeredQuestions[currentQuestionIndex]) return;
+
+        const currentQuestion = questions[currentQuestionIndex];
+        const isCorrect = index === currentQuestion.answer;
+        answeredQuestions[currentQuestionIndex] = { selected: index, correct: isCorrect };
+
+        const optionsElement = document.getElementById("options");
+        const explanationElement = document.getElementById("explanation");
+
+        optionsElement.children[index].classList.add(isCorrect ? "correct" : "incorrect");
+        if (!isCorrect) {
+          optionsElement.children[currentQuestion.answer].classList.add("correct");
+        }
+
+        explanationElement.classList.add("show");
+        updateNavButtons();
         updateProgressDisplay();
       }
 
@@ -543,8 +389,6 @@
         if (currentQuestionIndex > 0) {
           currentQuestionIndex--;
           displayQuestion();
-          updateNavButtons();
-          updatePagination();
         }
       }
 
@@ -552,8 +396,6 @@
         if (currentQuestionIndex < questions.length - 1) {
           currentQuestionIndex++;
           displayQuestion();
-          updateNavButtons();
-          updatePagination();
         }
       }
 
@@ -561,99 +403,29 @@
         const questionNav = document.getElementById("question-nav");
         questionNav.innerHTML = "";
 
-        const start = (currentPage - 1) * QUESTIONS_PER_PAGE;
-        const end = Math.min(start + QUESTIONS_PER_PAGE, questions.length);
-
-        for (let i = start; i < end; i++) {
+        for (let i = 0; i < questions.length; i++) {
           const navButton = document.createElement("button");
           navButton.textContent = i + 1;
-          navButton.addEventListener("click", function () {
+          navButton.classList.add("question-nav-button");
+          navButton.addEventListener("click", () => {
             currentQuestionIndex = i;
             displayQuestion();
-            updateNavButtons();
-            updatePagination();
           });
-
-          if (answeredQuestions[i] === "correct") {
-            navButton.classList.add("correct");
-          } else if (answeredQuestions[i] === "incorrect") {
-            navButton.classList.add("incorrect");
-          }
-
           questionNav.appendChild(navButton);
         }
 
         updateNavButtons();
       }
 
-      function createPagination() {
-        const pagination = document.getElementById("pagination");
-        pagination.innerHTML = "";
-
-        const totalPages = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
-
-        const createButton = (text, disabled, onClick) => {
-          const button = document.createElement("button");
-          button.textContent = text;
-          button.disabled = disabled;
-          button.addEventListener("click", onClick);
-          return button;
-        };
-
-        pagination.appendChild(
-          createButton("First", currentPage === 1, () => {
-            currentPage = 1;
-            createNavButtons();
-            updatePagination();
-          })
-        );
-
-        pagination.appendChild(
-          createButton("Prev", currentPage === 1, () => {
-            if (currentPage > 1) {
-              currentPage--;
-              createNavButtons();
-              updatePagination();
-            }
-          })
-        );
-
-        pagination.appendChild(
-          createButton("Next", currentPage === totalPages, () => {
-            if (currentPage < totalPages) {
-              currentPage++;
-              createNavButtons();
-              updatePagination();
-            }
-          })
-        );
-
-        pagination.appendChild(
-          createButton("Last", currentPage === totalPages, () => {
-            currentPage = totalPages;
-            createNavButtons();
-            updatePagination();
-          })
-        );
-
-        updatePagination();
-      }
-
       function updateNavButtons() {
-        const navButtons = document.querySelectorAll(".question-nav button");
+        const navButtons = document.querySelectorAll(".question-nav-button");
         navButtons.forEach((button, index) => {
-          button.classList.toggle("active", index + (currentPage - 1) * QUESTIONS_PER_PAGE === currentQuestionIndex);
-        });
-      }
-
-      function updatePagination() {
-        const paginationButtons = document.querySelectorAll(".pagination button");
-        paginationButtons.forEach((button, index) => {
-          button.disabled =
-            (index === 0 && currentPage === 1) ||
-            (index === 1 && currentPage === 1) ||
-            (index === 2 && currentPage === Math.ceil(questions.length / QUESTIONS_PER_PAGE)) ||
-            (index === 3 && currentPage === Math.ceil(questions.length / QUESTIONS_PER_PAGE));
+          button.classList.toggle("active", index === currentQuestionIndex);
+          if (answeredQuestions[index]) {
+            button.classList.add(answeredQuestions[index].correct ? "correct" : "incorrect");
+          } else {
+            button.classList.remove("correct", "incorrect");
+          }
         });
       }
 
@@ -663,10 +435,57 @@
         progressDisplay.textContent = `${answeredCount}/${questions.length}`;
       }
 
-      function updateProgressBar() {
-        const progressBar = document.getElementById("progress-bar");
-        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-        progressBar.style.width = progress + "%";
+      function startTimer() {
+        startTime = new Date();
+        timer = setInterval(updateTimer, 1000);
+      }
+
+      function updateTimer() {
+        const currentTime = new Date();
+        const elapsedTime = new Date(currentTime - startTime);
+        const minutes = elapsedTime.getUTCMinutes().toString().padStart(2, "0");
+        const seconds = elapsedTime.getUTCSeconds().toString().padStart(2, "0");
+        document.getElementById("timer").textContent = `Time: ${minutes}:${seconds}`;
+      }
+
+      function resetQuiz() {
+        currentQuestionIndex = 0;
+        answeredQuestions = {};
+        clearInterval(timer);
+        startTimer();
+        shuffleQuestions();
+        displayQuestion();
+        updateNavButtons();
+        updateProgressDisplay();
+      }
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+          prevQuestion();
+        } else if (e.key === "ArrowRight") {
+          nextQuestion();
+        }
+      });
+
+      // Save progress to localStorage
+      window.addEventListener("beforeunload", () => {
+        localStorage.setItem(
+          "quizProgress",
+          JSON.stringify({
+            answeredQuestions,
+            currentQuestionIndex,
+            startTime: startTime.getTime(),
+          })
+        );
+      });
+
+      // Load progress from localStorage
+      const savedProgress = JSON.parse(localStorage.getItem("quizProgress"));
+      if (savedProgress) {
+        answeredQuestions = savedProgress.answeredQuestions;
+        currentQuestionIndex = savedProgress.currentQuestionIndex;
+        startTime = new Date(savedProgress.startTime);
       }
     </script>
   </body>
