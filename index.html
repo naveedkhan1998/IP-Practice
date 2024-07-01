@@ -63,6 +63,22 @@
         font-size: 32px;
         color: #e0e0e0;
       }
+      .explanation {
+        background: rgba(46, 204, 113, 0.2);
+        border-left: 4px solid #2ecc71;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 12px;
+        max-height: 150px;
+        overflow-y: auto;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        display: none; /* Hide explanation initially */
+      }
+      .explanation.show {
+        opacity: 1;
+        display: block; /* Show explanation when .show class is added */
+      }
       .question {
         font-size: 24px;
         margin-bottom: 25px;
@@ -120,24 +136,12 @@
           transform: scale(0.9);
         }
       }
-      .explanation {
-        background: rgba(46, 204, 113, 0.2);
-        border-left: 4px solid #2ecc71;
-        padding: 15px;
-        margin-top: 20px;
-        border-radius: 12px;
-        max-height: 150px;
-        overflow-y: auto;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-      }
-      .explanation.show {
-        opacity: 1;
-      }
       .navigation {
         margin-top: 30px;
         display: flex;
         justify-content: space-between;
+        padding-top: 20px;
+        border-top: 2px solid rgba(255, 255, 255, 0.2);
       }
       .navigation button {
         background-color: #1abc9c;
@@ -164,13 +168,12 @@
         font-size: 24px;
       }
       .question-nav-container {
-        max-height: 150px;
-        overflow-y: auto;
-        margin-top: 20px;
-        border-radius: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-top: 2px solid rgba(255, 255, 255, 0.2);
         background-color: rgba(0, 0, 0, 0.5);
-        padding-top: 45px;
-        padding-bottom: 45px;
+        border-radius: 12px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -325,8 +328,8 @@
       <ul class="options" id="options"></ul>
       <div class="explanation" id="explanation"></div>
       <div class="navigation">
-        <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled data-tooltip="Previous Question">&lt;</button>
-        <button id="next-button" onclick="nextQuestion()" class="arrow" data-tooltip="Next Question">&gt;</button>
+        <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled>&lt;</button>
+        <button id="next-button" onclick="nextQuestion()" class="arrow">&gt;</button>
       </div>
       <div class="question-nav-container">
         <div class="question-nav" id="question-nav"></div>
@@ -364,6 +367,7 @@
         questionElement.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
         optionsElement.innerHTML = "";
         explanationElement.classList.remove("show");
+        explanationElement.style.display = "none";
         explanationElement.textContent = currentQuestion.explanation;
 
         currentQuestion.options.forEach((option, index) => {
@@ -382,6 +386,7 @@
               answeredQuestions[currentQuestionIndex] = "incorrect";
             }
             explanationElement.classList.add("show");
+            explanationElement.style.display = "block";
             updateNavButtons();
           });
           optionsElement.appendChild(optionItem);
