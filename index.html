@@ -6,6 +6,21 @@
     <title>IP Law Questions</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
     <style>
+      :root {
+        --background-dark: linear-gradient(135deg, #121212, #1f1f1f);
+        --background-light: linear-gradient(135deg, #f0f0f0, #ffffff);
+        --text-dark: #ffffff;
+        --text-light: #000000;
+        --container-dark: #1b1b1b;
+        --container-light: #ffffff;
+        --progress-bar-dark: #3498db;
+        --progress-bar-light: #3498db;
+        --explanation-dark: rgba(46, 204, 113, 0.2);
+        --explanation-light: rgba(46, 204, 113, 0.8);
+        --progress-display-dark: #2c2c2c;
+        --progress-display-light: #d3d3d3;
+      }
+
       body {
         font-family: "Roboto", sans-serif;
         display: flex;
@@ -13,26 +28,27 @@
         align-items: center;
         height: auto;
         margin: 0;
-        background: linear-gradient(135deg, #121212, #1f1f1f);
-        color: #ffffff;
+        background: var(--background-dark);
+        color: var(--text-dark);
         padding: 20px;
         box-sizing: border-box;
         overflow-y: auto;
         flex-direction: column;
+        transition: background 0.3s, color 0.3s;
       }
 
       .progress-bar {
         height: 5px;
-        background: #3498db;
+        background: var(--progress-bar-dark);
         width: 100%;
-        transition: width 0.3s;
+        transition: width 0.3s, background 0.3s;
         position: fixed;
         top: 0;
         left: 0;
       }
 
       .container {
-        background: #1b1b1b;
+        background: var(--container-dark);
         border-radius: 20px;
         padding: 40px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
@@ -45,17 +61,7 @@
         margin-top: 40px;
         margin-bottom: 20px;
         overflow-x: clip;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        transition: background 0.3s;
       }
 
       .header {
@@ -67,20 +73,41 @@
 
       .header h1 {
         font-size: 32px;
-        color: #f0f0f0;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
       }
 
       .progress-display {
         font-size: 18px;
-        color: #ffffff;
-        background: #2c2c2c;
+        background: var(--progress-display-dark);
         padding: 10px 20px;
         border-radius: 12px;
+        transition: background 0.3s;
+      }
+
+      .toggle-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 20px;
+        transition: transform 0.3s;
+      }
+
+      .toggle-button svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .toggle-button:hover {
+        transform: scale(1.1);
       }
 
       .explanation {
-        background: rgba(46, 204, 113, 0.2);
+        background: var(--explanation-dark);
         border-left: 4px solid #2ecc71;
         padding: 15px;
         margin-top: 20px;
@@ -100,7 +127,6 @@
       .question {
         font-size: 24px;
         margin-bottom: 25px;
-        color: #f0f0f0;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
       }
 
@@ -118,7 +144,6 @@
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.15));
         display: flex;
         align-items: center;
-        color: #ffffff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
 
@@ -329,6 +354,32 @@
         cursor: not-allowed;
       }
 
+      body::-webkit-scrollbar,
+      .question-nav-container::-webkit-scrollbar {
+        width: 8px;
+        background: rgb(0, 0, 0);
+        background-color: #2c2c2c;
+      }
+
+      body::-webkit-scrollbar-track,
+      .question-nav-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+      }
+
+      body::-webkit-scrollbar-thumb,
+      .question-nav-container::-webkit-scrollbar-thumb {
+        background-color: #1abc9c;
+        border-radius: 12px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+
+      body::-webkit-scrollbar-thumb:hover,
+      .question-nav-container::-webkit-scrollbar-thumb:hover {
+        background-color: #16a085;
+      }
+
       @media (max-width: 600px) {
         .container {
           padding: 20px;
@@ -364,30 +415,13 @@
         }
       }
 
-      body::-webkit-scrollbar,
-      .question-nav-container::-webkit-scrollbar {
-        width: 8px;
-        background: rgb(0, 0, 0);
-        background-color: #2c2c2c;
-      }
-
-      body::-webkit-scrollbar-track,
-      .question-nav-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-      }
-
-      body::-webkit-scrollbar-thumb,
-      .question-nav-container::-webkit-scrollbar-thumb {
-        background-color: #1abc9c;
-        border-radius: 12px;
-        border: 2px solid transparent;
-        background-clip: padding-box;
-      }
-
-      body::-webkit-scrollbar-thumb:hover,
-      .question-nav-container::-webkit-scrollbar-thumb:hover {
-        background-color: #16a085;
+      body.light-mode {
+        --background-dark: var(--background-light);
+        --text-dark: var(--text-light);
+        --container-dark: var(--container-light);
+        --progress-bar-dark: var(--progress-bar-light);
+        --explanation-dark: var(--explanation-light);
+        --progress-display-dark: var(--progress-display-light);
       }
     </style>
   </head>
@@ -396,7 +430,12 @@
     <div class="container" id="question-container">
       <div class="header">
         <h1>IP Law Questions</h1>
-        <div class="progress-display" id="progress-display">0/0</div>
+        <div class="header-right">
+          <div class="progress-display" id="progress-display">0/0</div>
+          <button class="toggle-button" id="mode-toggle">
+            <img id="toggle-icon" width="45px" src="sun.svg" alt="icon" />
+          </button>
+        </div>
       </div>
       <div class="question" id="question"></div>
       <ul class="options" id="options"></ul>
@@ -415,6 +454,22 @@
     </div>
 
     <script>
+      const modeToggle = document.getElementById("mode-toggle");
+      const toggleIcon = document.getElementById("toggle-icon");
+
+      modeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("light-mode");
+        updateToggleIcon();
+      });
+
+      function updateToggleIcon() {
+        if (document.body.classList.contains("light-mode")) {
+          toggleIcon.src = "moon.svg";
+        } else {
+          toggleIcon.src = "sun.svg";
+        }
+      }
+
       const QUESTIONS_PER_PAGE = 20;
       let currentQuestionIndex = 0;
       let questions = [];
