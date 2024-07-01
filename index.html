@@ -125,6 +125,7 @@
         display: flex;
         justify-content: space-between;
         margin-top: 2rem;
+        margin-bottom: 2rem;
       }
 
       .nav-button {
@@ -269,15 +270,15 @@
         </div>
       </div>
       <div class="timer" id="timer">Time: 00:00</div>
+      <div class="navigation">
+        <button class="nav-button" id="prev-button" onclick="prevQuestion()">&larr;</button>
+        <button class="nav-button" id="next-button" onclick="nextQuestion()">&rarr;</button>
+      </div>
       <div class="question" id="question"></div>
       <ul class="options" id="options"></ul>
       <div class="explanation" id="explanation">
         <strong>Explanation:</strong>
         <p id="explanation-text"></p>
-      </div>
-      <div class="navigation">
-        <button class="nav-button" id="prev-button" onclick="prevQuestion()">&larr; Previous</button>
-        <button class="nav-button" id="next-button" onclick="nextQuestion()">Next &rarr;</button>
       </div>
       <div class="question-nav" id="question-nav"></div>
       <button class="reset-button" id="reset-button" onclick="resetQuiz()">Reset Quiz</button>
