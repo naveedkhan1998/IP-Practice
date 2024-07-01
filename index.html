@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IP Law Questions</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #121212;
+        color: #ffffff;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 1000px;
+        width: 100%;
+        display: flex;
+        backdrop-filter: blur(10px);
+        animation: fadeIn 1s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .question-nav {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        gap: 5px;
+        margin-left: 20px;
+        max-height: 500px;
+        width: 120px;
+        flex-wrap: wrap;
+      }
+      .question-nav button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        flex: 1 1 calc(50% - 10px);
+      }
+      .question-nav button:hover {
+        background-color: #0056b3;
+      }
+      .question-nav button.incorrect {
+        background-color: #ff4c4c;
+      }
+      .question-nav::-webkit-scrollbar {
+        width: 8px;
+      }
+      .question-nav::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+      .question-nav::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 10px;
+      }
+      .question-nav::-webkit-scrollbar-thumb:hover {
+        background: #0056b3;
+      }
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .question {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+      .options {
+        list-style: none;
+        padding: 0;
+      }
+      .options li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s;
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .options input {
+        display: none;
+      }
+      .options label {
+        cursor: pointer;
+      }
+      .options li:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+      .options li.correct {
+        background-color: #4caf50;
+        border: 1px solid #388e3c;
+      }
+      .options li.incorrect {
+        background-color: #f44336;
+        border: 1px solid #d32f2f;
+      }
+      .explanation {
+        background: rgba(76, 175, 80, 0.2);
+        border-left: 4px solid #4caf50;
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 8px;
+        height: 100px;
+        overflow-y: auto;
+        visibility: hidden;
+      }
+      .explanation.show {
+        visibility: visible;
+      }
+      .navigation {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .navigation button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        flex: 1;
+        font-size: 18px;
+        margin: 0 5px;
+      }
+      .navigation button:hover {
+        background-color: #0056b3;
+      }
+      .navigation button:disabled {
+        background-color: #444;
+        cursor: not-allowed;
+      }
+      .navigation .arrow {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="question-container">
+      <div class="content">
+        <div class="header">
+        </div>
+        <div class="question" id="question"></div>
+        <ul class="options" id="options"></ul>
+        <div class="explanation" id="explanation"></div>
+        <div class="navigation">
+          <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled>&lt;</button>
+          <button id="next-button" onclick="nextQuestion()" class="arrow">&gt;</button>
+        </div>
+      </div>
+      <div class="question-nav" id="question-nav"></div>
+    </div>
+
+    <script>
+      let currentQuestionIndex = 0;
+      let questions = [];
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("questions.json")
+          .then((response) => response.json())
+          .then((data) => {
+            questions = data;
+            displayQuestion();
+            createNavButtons();
+          });
+      });
+
+      function displayQuestion() {
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+        const explanationElement = document.getElementById("explanation");
+        const prevButton = document.getElementById("prev-button");
+        const nextButton = document.getElementById("next-button");
+
+        const currentQuestion = questions[currentQuestionIndex];
+
+        questionElement.textContent = currentQuestion.question;
+        optionsElement.innerHTML = "";
+        explanationElement.classList.remove("show");
+        explanationElement.textContent = currentQuestion.explanation;
+
+        currentQuestion.options.forEach((option, index) => {
+          const optionItem = document.createElement("li");
+          optionItem.textContent = option;
+          optionItem.addEventListener("click", function () {
+            document.querySelectorAll(".options li").forEach((li) => li.classList.remove("correct", "incorrect"));
+            if (index === currentQuestion.answer) {
+              optionItem.classList.add("correct");
+            } else {
+              optionItem.classList.add("incorrect");
+              document.querySelectorAll(".options li")[currentQuestion.answer].classList.add("correct");
+              document.querySelectorAll(".question-nav button")[currentQuestionIndex].classList.add("incorrect");
+            }
+            explanationElement.classList.add("show");
+            updateNavButtons();
+          });
+          optionsElement.appendChild(optionItem);
+        });
+
+        prevButton.disabled = currentQuestionIndex === 0;
+        nextButton.disabled = currentQuestionIndex === questions.length - 1;
+      }
+
+      function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          displayQuestion();
+          updateNavButtons();
+        }
+      }
+
+      function nextQuestion() {
+        if (currentQuestionIndex < questions.length - 1) {
+          currentQuestionIndex++;
+          displayQuestion();
+          updateNavButtons();
+        }
+      }
+
+      function createNavButtons() {
+        const questionNav = document.getElementById("question-nav");
+        questionNav.innerHTML = "";
+
+        questions.forEach((_, index) => {
+          const navButton = document.createElement("button");
+          navButton.textContent = index + 1;
+          navButton.addEventListener("click", function () {
+            currentQuestionIndex = index;
+            displayQuestion();
+            updateNavButtons();
+          });
+          questionNav.appendChild(navButton);
+        });
+
+        updateNavButtons();
+      }
+
+      function updateNavButtons() {
+        const navButtons = document.querySelectorAll(".question-nav button");
+        navButtons.forEach((button, index) => {
+          if (index === currentQuestionIndex) {
+            button.style.backgroundColor = "#0056b3";
+          } else {
+            button.style.backgroundColor = "#007bff";
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
