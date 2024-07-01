@@ -4,107 +4,157 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IP Law Questions</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
     <style>
       body {
-        font-family: 'Arial', sans-serif;
+        font-family: "Roboto", sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        height: auto;
         margin: 0;
-        background-color: #121212;
+        background: linear-gradient(135deg, #121212, #1f1f1f);
         color: #ffffff;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        flex-direction: column;
+      }
+      .progress-bar {
+        height: 5px;
+        background: #3498db;
+        width: 100%;
+        transition: width 0.3s;
+        position: fixed;
+        top: 0;
+        left: 0;
       }
       .container {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         max-width: 800px;
         width: 100%;
         display: flex;
         flex-direction: column;
         backdrop-filter: blur(10px);
-        animation: fadeIn 1s ease-in-out;
+        animation: fadeIn 0.5s ease-in-out;
+        margin-top: 40px;
+        margin-bottom: 20px;
       }
       @keyframes fadeIn {
         from {
           opacity: 0;
+          transform: translateY(-20px);
         }
         to {
           opacity: 1;
+          transform: translateY(0);
         }
       }
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        font-size: 32px;
+        color: #e0e0e0;
       }
       .question {
-        font-size: 20px;
-        margin-bottom: 20px;
+        font-size: 24px;
+        margin-bottom: 25px;
+        color: #e0e0e0;
       }
       .options {
         list-style: none;
         padding: 0;
       }
       .options li {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         cursor: pointer;
-        padding: 10px;
-        border-radius: 8px;
+        padding: 20px;
+        border-radius: 12px;
         transition: background-color 0.3s, transform 0.3s;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        color: #e0e0e0;
       }
       .options input {
         display: none;
       }
       .options label {
         cursor: pointer;
+        width: 100%;
       }
       .options li:hover {
-        background-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 255, 255, 0.2);
         transform: scale(1.05);
       }
       .options li.correct {
-        background-color: #4caf50;
-        border: 1px solid #388e3c;
+        background-color: #2ecc71;
+        border: 1px solid #27ae60;
+        animation: correctAnswer 0.5s ease-in-out;
       }
       .options li.incorrect {
-        background-color: #f44336;
-        border: 1px solid #d32f2f;
+        background-color: #e74c3c;
+        border: 1px solid #c0392b;
+        animation: incorrectAnswer 0.5s ease-in-out;
+      }
+      @keyframes correctAnswer {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.1);
+        }
+      }
+      @keyframes incorrectAnswer {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(0.9);
+        }
       }
       .explanation {
-        background: rgba(76, 175, 80, 0.2);
-        border-left: 4px solid #4caf50;
-        padding: 10px;
+        background: rgba(46, 204, 113, 0.2);
+        border-left: 4px solid #2ecc71;
+        padding: 15px;
         margin-top: 20px;
-        border-radius: 8px;
-        height: 100px;
+        border-radius: 12px;
+        max-height: 150px;
         overflow-y: auto;
-        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
       }
       .explanation.show {
-        visibility: visible;
+        opacity: 1;
       }
       .navigation {
-        margin-top: 20px;
+        margin-top: 30px;
         display: flex;
         justify-content: space-between;
       }
       .navigation button {
-        background-color: #007bff;
+        background-color: #1abc9c;
+        background-image: linear-gradient(to bottom right, #16a085, #1abc9c);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         color: white;
         border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
+        padding: 15px 25px;
+        border-radius: 12px;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: all 0.3s ease;
         font-size: 18px;
+        display: flex;
+        align-items: center;
       }
       .navigation button:hover {
-        background-color: #0056b3;
+        background-image: linear-gradient(to bottom right, #1abc9c, #16a085);
       }
       .navigation button:disabled {
         background-color: #444;
@@ -113,40 +163,160 @@
       .navigation .arrow {
         font-size: 24px;
       }
-      .question-nav {
+      .question-nav-container {
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 20px;
+        border-radius: 12px;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding-top: 45px;
+        padding-bottom: 45px;
         display: flex;
         justify-content: center;
+        align-items: center;
+      }
+      .question-nav {
+        display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-top: 20px;
+        justify-content: center;
       }
       .question-nav button {
-        background-color: #007bff;
+        background-color: #3498db;
         color: white;
         border: none;
-        padding: 10px;
+        padding: 15px;
         border-radius: 50%;
         cursor: pointer;
         transition: background-color 0.3s;
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 16px;
       }
       .question-nav button:hover {
-        background-color: #0056b3;
+        background-color: #2980b9;
       }
       .question-nav button.incorrect {
-        background-color: #ff4c4c;
+        background-color: #e74c3c;
+      }
+      .question-nav button.correct {
+        background-color: #2ecc71;
       }
       .question-nav button.active {
-        background-color: #0056b3;
+        background-color: #2980b9;
+      }
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        gap: 10px;
+      }
+      .pagination button {
+        background-color: #e67e22;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 14px;
+      }
+      .pagination button:hover {
+        background-color: #d35400;
+      }
+      .pagination button:disabled {
+        background-color: #444;
+        cursor: not-allowed;
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+        .navigation button {
+          padding: 10px 20px;
+          font-size: 16px;
+        }
+        .question {
+          font-size: 20px;
+        }
+        .options li {
+          padding: 15px;
+          font-size: 16px;
+        }
+        .navigation .arrow {
+          font-size: 20px;
+        }
+        .question-nav {
+          gap: 8px;
+        }
+        .question-nav button {
+          width: 40px;
+          height: 40px;
+          font-size: 14px;
+        }
+        .pagination button {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+        .question-nav-container {
+          max-height: 100px;
+        }
+      }
+      /* Custom Scrollbar styles */
+      body::-webkit-scrollbar,
+      .question-nav-container::-webkit-scrollbar {
+        width: 8px;
+        background: rgb(0, 0, 0);
+        background-color: #2c2c2c;
+      }
+      body::-webkit-scrollbar-track,
+      .question-nav-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+      }
+      body::-webkit-scrollbar-thumb,
+      .question-nav-container::-webkit-scrollbar-thumb {
+        background-color: #1abc9c;
+        border-radius: 12px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+      body::-webkit-scrollbar-thumb:hover,
+      .question-nav-container::-webkit-scrollbar-thumb:hover {
+        background-color: #16a085;
+      }
+      .navigation button,
+      .pagination button {
+        position: relative;
+      }
+      .navigation button::after,
+      .pagination button::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+      }
+      .navigation button:hover::after,
+      .pagination button:hover::after {
+        opacity: 1;
+        visibility: visible;
       }
     </style>
   </head>
   <body>
+    <div class="progress-bar" id="progress-bar"></div>
     <div class="container" id="question-container">
       <div class="header">
         <h1>IP Law Questions</h1>
@@ -155,15 +325,21 @@
       <ul class="options" id="options"></ul>
       <div class="explanation" id="explanation"></div>
       <div class="navigation">
-        <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled>&lt;</button>
-        <button id="next-button" onclick="nextQuestion()" class="arrow">&gt;</button>
+        <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled data-tooltip="Previous Question">&lt;</button>
+        <button id="next-button" onclick="nextQuestion()" class="arrow" data-tooltip="Next Question">&gt;</button>
       </div>
-      <div class="question-nav" id="question-nav"></div>
+      <div class="question-nav-container">
+        <div class="question-nav" id="question-nav"></div>
+      </div>
+      <div class="pagination" id="pagination"></div>
     </div>
 
     <script>
+      const QUESTIONS_PER_PAGE = 20;
       let currentQuestionIndex = 0;
       let questions = [];
+      let currentPage = 1;
+      let answeredQuestions = {};
 
       document.addEventListener("DOMContentLoaded", function () {
         fetch("questions.json")
@@ -172,6 +348,7 @@
             questions = data;
             displayQuestion();
             createNavButtons();
+            createPagination();
           });
       });
 
@@ -184,7 +361,7 @@
 
         const currentQuestion = questions[currentQuestionIndex];
 
-        questionElement.textContent = currentQuestion.question;
+        questionElement.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
         optionsElement.innerHTML = "";
         explanationElement.classList.remove("show");
         explanationElement.textContent = currentQuestion.explanation;
@@ -196,10 +373,13 @@
             document.querySelectorAll(".options li").forEach((li) => li.classList.remove("correct", "incorrect"));
             if (index === currentQuestion.answer) {
               optionItem.classList.add("correct");
+              document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("correct");
+              answeredQuestions[currentQuestionIndex] = "correct";
             } else {
               optionItem.classList.add("incorrect");
               document.querySelectorAll(".options li")[currentQuestion.answer].classList.add("correct");
-              document.querySelectorAll(".question-nav button")[currentQuestionIndex].classList.add("incorrect");
+              document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("incorrect");
+              answeredQuestions[currentQuestionIndex] = "incorrect";
             }
             explanationElement.classList.add("show");
             updateNavButtons();
@@ -207,8 +387,16 @@
           optionsElement.appendChild(optionItem);
         });
 
+        if (answeredQuestions[currentQuestionIndex] === "correct") {
+          document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("correct");
+        } else if (answeredQuestions[currentQuestionIndex] === "incorrect") {
+          document.querySelectorAll(".question-nav button")[currentQuestionIndex % QUESTIONS_PER_PAGE].classList.add("incorrect");
+        }
+
         prevButton.disabled = currentQuestionIndex === 0;
         nextButton.disabled = currentQuestionIndex === questions.length - 1;
+
+        updateProgressBar();
       }
 
       function prevQuestion() {
@@ -216,6 +404,7 @@
           currentQuestionIndex--;
           displayQuestion();
           updateNavButtons();
+          updatePagination();
         }
       }
 
@@ -224,6 +413,7 @@
           currentQuestionIndex++;
           displayQuestion();
           updateNavButtons();
+          updatePagination();
         }
       }
 
@@ -231,25 +421,106 @@
         const questionNav = document.getElementById("question-nav");
         questionNav.innerHTML = "";
 
-        questions.forEach((_, index) => {
+        const start = (currentPage - 1) * QUESTIONS_PER_PAGE;
+        const end = Math.min(start + QUESTIONS_PER_PAGE, questions.length);
+
+        for (let i = start; i < end; i++) {
           const navButton = document.createElement("button");
-          navButton.textContent = index + 1;
+          navButton.textContent = i + 1;
           navButton.addEventListener("click", function () {
-            currentQuestionIndex = index;
+            currentQuestionIndex = i;
             displayQuestion();
             updateNavButtons();
+            updatePagination();
           });
+
+          if (answeredQuestions[i] === "correct") {
+            navButton.classList.add("correct");
+          } else if (answeredQuestions[i] === "incorrect") {
+            navButton.classList.add("incorrect");
+          }
+
           questionNav.appendChild(navButton);
-        });
+        }
 
         updateNavButtons();
+      }
+
+      function createPagination() {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
+
+        const createButton = (text, disabled, onClick) => {
+          const button = document.createElement("button");
+          button.textContent = text;
+          button.disabled = disabled;
+          button.addEventListener("click", onClick);
+          return button;
+        };
+
+        pagination.appendChild(
+          createButton("First", currentPage === 1, () => {
+            currentPage = 1;
+            createNavButtons();
+            updatePagination();
+          })
+        );
+
+        pagination.appendChild(
+          createButton("Prev", currentPage === 1, () => {
+            if (currentPage > 1) {
+              currentPage--;
+              createNavButtons();
+              updatePagination();
+            }
+          })
+        );
+
+        pagination.appendChild(
+          createButton("Next", currentPage === totalPages, () => {
+            if (currentPage < totalPages) {
+              currentPage++;
+              createNavButtons();
+              updatePagination();
+            }
+          })
+        );
+
+        pagination.appendChild(
+          createButton("Last", currentPage === totalPages, () => {
+            currentPage = totalPages;
+            createNavButtons();
+            updatePagination();
+          })
+        );
+
+        updatePagination();
       }
 
       function updateNavButtons() {
         const navButtons = document.querySelectorAll(".question-nav button");
         navButtons.forEach((button, index) => {
-          button.classList.toggle("active", index === currentQuestionIndex);
+          button.classList.toggle("active", index + (currentPage - 1) * QUESTIONS_PER_PAGE === currentQuestionIndex);
         });
+      }
+
+      function updatePagination() {
+        const paginationButtons = document.querySelectorAll(".pagination button");
+        paginationButtons.forEach((button, index) => {
+          button.disabled =
+            (index === 0 && currentPage === 1) ||
+            (index === 1 && currentPage === 1) ||
+            (index === 2 && currentPage === Math.ceil(questions.length / QUESTIONS_PER_PAGE)) ||
+            (index === 3 && currentPage === Math.ceil(questions.length / QUESTIONS_PER_PAGE));
+        });
+      }
+
+      function updateProgressBar() {
+        const progressBar = document.getElementById("progress-bar");
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        progressBar.style.width = progress + "%";
       }
     </script>
   </body>
