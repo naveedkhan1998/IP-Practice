@@ -521,29 +521,5 @@
     "options": ["A patent application", "A musical composition", "A word, phrase, or symbol", "A scientific discovery"],
     "answer": 2,
     "explanation": "Trademarks can include words, phrases, symbols, or combinations that distinguish goods or services."
-  },
-  {
-    "question": "Trademark protection is typically granted for:",
-    "options": ["10 years, renewable indefinitely", "20 years, non-renewable", "50 years from the filing date", "The life of the creator plus 70 years"],
-    "answer": 0,
-    "explanation": "Trademarks are protected for 10 years with the possibility of renewal, providing continuous protection as long as the mark is in use."
-  },
-  {
-    "question": "The process of removing a trademark from the register is called:",
-    "options": ["Opposition", "Expungement", "Prosecution", "Valuation"],
-    "answer": 1,
-    "explanation": "Expungement is the legal process of removing a trademark from the register, often due to non-use or invalidity."
-  },
-  {
-    "question": "A trademark that has become generic and lost its distinctiveness is said to be:",
-    "options": ["Abandoned", "Expunged", "Diluted", "Public domain"],
-    "answer": 2,
-    "explanation": "Trademark dilution occurs when a mark loses its distinctiveness and becomes generic, often due to widespread, improper use."
-  },
-  {
-    "question": "What is the purpose of an IP audit?",
-    "options": ["To increase market competition", "To assess the value and protection of IP assets", "To disclose confidential information", "To avoid registering IP rights"],
-    "answer": 1,
-    "explanation": "An IP audit evaluates the value and protection status of a company's IP assets, identifying potential gaps and risks."
   }
 ]
