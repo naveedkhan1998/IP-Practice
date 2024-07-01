@@ -459,6 +459,81 @@
         updateProgressDisplay();
       }
 
+      // Utility functions for cookies
+      function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === " ") c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      function deleteCookie(name) {
+        document.cookie = name + "=; Max-Age=-99999999;";
+      }
+
+      // Check LocalStorage availability
+      function isLocalStorageAvailable() {
+        try {
+          const testKey = "test";
+          localStorage.setItem(testKey, "1");
+          localStorage.removeItem(testKey);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      // Function to save progress
+      function saveProgress() {
+        const progress = {
+          answeredQuestions,
+          currentQuestionIndex,
+          startTime: startTime.getTime(),
+        };
+        const progressString = JSON.stringify(progress);
+
+        if (isLocalStorageAvailable()) {
+          localStorage.setItem("quizProgress", progressString);
+        } else {
+          setCookie("quizProgress", progressString, 7); // Store for 7 days
+        }
+      }
+
+      // Function to load progress
+      function loadProgress() {
+        let savedProgress;
+
+        if (isLocalStorageAvailable()) {
+          savedProgress = JSON.parse(localStorage.getItem("quizProgress"));
+        } else {
+          savedProgress = JSON.parse(getCookie("quizProgress"));
+        }
+
+        if (savedProgress) {
+          answeredQuestions = savedProgress.answeredQuestions;
+          currentQuestionIndex = savedProgress.currentQuestionIndex;
+          startTime = new Date(savedProgress.startTime);
+        }
+      }
+
+      // Event listeners for saving progress
+      window.addEventListener("beforeunload", saveProgress);
+      document.addEventListener("DOMContentLoaded", loadProgress);
+
+      // Call loadProgress on page load
+      loadProgress();
+
       // Keyboard navigation
       document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowLeft") {
@@ -470,23 +545,8 @@
 
       // Save progress to localStorage
       window.addEventListener("beforeunload", () => {
-        localStorage.setItem(
-          "quizProgress",
-          JSON.stringify({
-            answeredQuestions,
-            currentQuestionIndex,
-            startTime: startTime.getTime(),
-          })
-        );
+        saveProgress();
       });
-
-      // Load progress from localStorage
-      const savedProgress = JSON.parse(localStorage.getItem("quizProgress"));
-      if (savedProgress) {
-        answeredQuestions = savedProgress.answeredQuestions;
-        currentQuestionIndex = savedProgress.currentQuestionIndex;
-        startTime = new Date(savedProgress.startTime);
-      }
     </script>
   </body>
 </html>
