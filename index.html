@@ -30,7 +30,7 @@
         left: 0;
       }
       .container {
-        background: rgba(0, 0, 0, 0.7);
+        background: #1b1b1b;
         border-radius: 20px;
         padding: 40px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -108,7 +108,7 @@
       }
       .options li:hover {
         background-color: rgba(255, 255, 255, 0.2);
-        transform: scale(1.05);
+        transform: scale(1.02);
       }
       .options li.correct {
         background-color: #2ecc71;
@@ -125,7 +125,7 @@
           transform: scale(1);
         }
         to {
-          transform: scale(1.1);
+          transform: scale(1.05);
         }
       }
       @keyframes incorrectAnswer {
@@ -133,7 +133,7 @@
           transform: scale(1);
         }
         to {
-          transform: scale(0.9);
+          transform: scale(0.95);
         }
       }
       .navigation {
@@ -172,7 +172,7 @@
         padding-top: 20px;
         padding-bottom: 20px;
         border-top: 2px solid rgba(255, 255, 255, 0.2);
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(30, 30, 30, 0.8);
         border-radius: 12px;
         display: flex;
         justify-content: center;
@@ -324,9 +324,12 @@
       <div class="header">
         <h1>IP Law Questions</h1>
       </div>
+      <div class="explanation" id="explanation">
+        <strong>Explanation:</strong>
+        <p id="explanation-text"></p>
+      </div>
       <div class="question" id="question"></div>
       <ul class="options" id="options"></ul>
-      <div class="explanation" id="explanation"></div>
       <div class="navigation">
         <button id="prev-button" onclick="prevQuestion()" class="arrow" disabled>&lt;</button>
         <button id="next-button" onclick="nextQuestion()" class="arrow">&gt;</button>
@@ -359,6 +362,7 @@
         const questionElement = document.getElementById("question");
         const optionsElement = document.getElementById("options");
         const explanationElement = document.getElementById("explanation");
+        const explanationTextElement = document.getElementById("explanation-text");
         const prevButton = document.getElementById("prev-button");
         const nextButton = document.getElementById("next-button");
 
@@ -368,7 +372,7 @@
         optionsElement.innerHTML = "";
         explanationElement.classList.remove("show");
         explanationElement.style.display = "none";
-        explanationElement.textContent = currentQuestion.explanation;
+        explanationTextElement.textContent = currentQuestion.explanation;
 
         currentQuestion.options.forEach((option, index) => {
           const optionItem = document.createElement("li");
